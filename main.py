@@ -4,7 +4,7 @@ import time
 from fungsi import CheckStatus, http_get, request
 
 MY_ID  = 'lopy1'
-BASE   = 'http://192.168.42.13'
+BASE   = 'http://localhost'
 CHECK  = '/SolarCharger/api/status/check.php?id=' + MY_ID
 INPUT  = '/SolarCharger/api/update/dataperangkat.php'
 
