@@ -1,47 +1,50 @@
 import socket
 import ujson
 
-# [ Server ke Lora (panel surya) ]
-# 1. Id perangkat
+# MODEL OBJECT
+class CheckStatus:
+    def __init__(self, inputdata):
+        self.obj = inputdata
+        self.id = self.parse('id')
+        self.id_perangkat = self.parse('id_perangkat')
 
-# [ Lora (panel surya) ke server ]
-# 1. Tegangan panel surya
-# 2  Arus panel surya
-# 3. Tegangan baterai
-# 4. Arus baterai
+    def parse(self, data):
+        try:
+            return self.obj[data]
+        except:
+            return None 
 
-URL = 'www.micropython.org'
-PATH = '/'
-# URL = 'openlibrary.telkomuniversity.ac.id'
-# PATH = '/room/index.php/Rfidbooked?rfid=040D3782253980&roomid=15'
-# s.settimeout(5000)
-
-def contoh():
-    # init data
-    # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# API HTTP GET
+def http_get(url):
+    _, _, host, path = url.split('/', 3)
+    print("HOST : " + host)
+    print("PATH : " + path)
+    addr = socket.getaddrinfo(host, 80)[0][-1]
     s = socket.socket()
-    s.connect(socket.getaddrinfo(URL, 80)[0][-1])
-    s.sendall("GET " + PATH + " HTTP/1.0\r\nHost: " + URL + "\r\n\r\n")
+    s.connect(addr)
+    s.send(bytes('GET /%s HTTP/1.0\r\nHost: %s\r\n\r\n' % (path, host), 'utf8'))
+    val = ""
+    while True:
+        data = s.recv(2048)
+        if data:
+            val = str(data, 'utf8')
+        else:
+            break
+    s.close()
+    return val
 
-    #Parsing to string
-    raw = s.recv(4096)
-    parse = str(raw,"UTF-8")
-
-    # s.close
-    return parse
-
-def getJson():
-    # parse body to json
-    json = "{\"rc\":\"00\",\"status\":\"success\",\"data\":{\"suhu\":\"5\",\"humid\":\"10\",\"volt\":\"220\",\"amp\":\"2\"}}"
-    obj = ujson.loads(json)
-    return obj
-
-
-def initID(id):
-    print("ID"+ id)
-
-def sendParam():
-    print("Send")
-
-def getParam():
-    print("Get")
+# FILTERING BODY
+def request(URL):
+    data = None
+    dapet = http_get(URL)
+    dapet1 = dapet.split('\r\n\r\n')
+    fail = "{\"status\":\"Gagal Parsing Response\"}"
+    try:
+        data = ujson.loads(dapet1[1])
+        print("STAT : Success Get JSON Data\n")
+        print(dapet1[1])
+    except:
+        print("STAT : Failed Get JSON Data\n")
+        print(dapet1[1])
+        return ujson.loads(fail)
+    return data

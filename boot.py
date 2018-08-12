@@ -5,11 +5,11 @@ import machine
 from network import WLAN
 
 # CONFIG
-# SSID = 'PONDOK DR LT 1'
-# PSWD = 'bulanpuasa'
+SSID = 'PONDOK DR LT 1'
+PSWD = 'bulanpuasa'
 
-SSID = 'Link Space'
-PSWD = ''
+# SSID = 'Link Space'
+# PSWD = ''
 
 pycom.heartbeat(False)
 wlan = WLAN(mode=WLAN.STA)
