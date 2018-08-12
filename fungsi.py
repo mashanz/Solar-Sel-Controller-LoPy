@@ -1,5 +1,6 @@
 import socket
-import json as json
+import ujson as json
+import crypto
 
 # MODEL OBJECT
 class CheckStatus:
@@ -12,7 +13,7 @@ class CheckStatus:
         try:
             return self.obj[data]
         except:
-            return None 
+            return None
 
 def updateData(base, path, id, cell_current, cell_voltage, solar_current, solar_voltage):
     PATH = path + "?id=" + id + "&cell_current=" + str(cell_current) + "&cell_voltage=" + str(cell_voltage) + "&solar_current=" + str(solar_current) + "&solar_voltage=" + str(solar_voltage)
@@ -52,3 +53,11 @@ def request(URL):
         print(dapet1[1])
         return json.loads(fail)
     return data
+
+
+def Random():
+   r = crypto.getrandbits(32)
+   return ((r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3])/4294967295.0
+
+def RandomRange(rfrom, rto):
+   return Random()*(rto-rfrom)+rfrom

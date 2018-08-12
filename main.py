@@ -1,27 +1,30 @@
-# import pycom
+import pycom
 import time
-from fungsi import CheckStatus, http_get, request, updateData
+import crypto
+from fungsi import CheckStatus, http_get, request, updateData, RandomRange
 
 MY_ID  = 'lopy1'
 BASE   = 'http://192.168.1.110'
 CHECK  = '/SolarCharger/api/status/check.php?id=' + MY_ID
-INPUT  = '/SolarCharger/api/update/dataperaangkat.php'
+INPUT  = '/SolarCharger/api/update/dataperangkat.php'
 
 # MAIN PROGRAM
 if __name__=="__main__":
     while 1:
         time.sleep(1)
-        # pycom.rgbled(0x000f00)
+        pycom.rgbled(0x000f00)
         parsing = CheckStatus(request(BASE + CHECK))
         try:
             print("ID adalah    : " + parsing.id)
             print("ID Perangkat : " + parsing.id_perangkat)
             # lakukan update data
-            # pycom.rgbled(0x00000f)
+            pycom.rgbled(0x00000f)
+            print("\n\n")
+            time.sleep(1)
             try:
-                updateData(BASE, INPUT, parsing.id, 100, 200, 300, 400)
+                updateData(BASE, INPUT, parsing.id_perangkat, RandomRange(0.1,2.4), RandomRange(0.0,13.0), RandomRange(0.0,2.9), RandomRange(0.0,12.9))
             except:
-                print("\n\n")    
+                print("GAGAL UPDATE\n\n")
         except:
-            # pycom.rgbled(0x0f0000)
+            pycom.rgbled(0x0f0000)
             print("\n\n")
