@@ -1,6 +1,6 @@
 import socket
-import ujson as json
-import crypto
+import json as json
+# import crypto
 
 # MODEL OBJECT
 class CheckStatus:
@@ -55,9 +55,9 @@ def request(URL):
     return data
 
 
-def Random():
-   r = crypto.getrandbits(32)
-   return ((r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3])/4294967295.0
+# def Random():
+#    r = crypto.getrandbits(32)
+#    return ((r[0]<<24)+(r[1]<<16)+(r[2]<<8)+r[3])/4294967295.0
 
-def RandomRange(rfrom, rto):
-   return Random()*(rto-rfrom)+rfrom
+# def RandomRange(rfrom, rto):
+#    return Random()*(rto-rfrom)+rfrom
