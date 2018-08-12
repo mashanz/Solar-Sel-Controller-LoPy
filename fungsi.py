@@ -1,5 +1,5 @@
 import socket
-import ujson
+import json as json
 
 # MODEL OBJECT
 class CheckStatus:
@@ -13,6 +13,10 @@ class CheckStatus:
             return self.obj[data]
         except:
             return None 
+
+def updateData(base, path, id, cell_current, cell_voltage, solar_current, solar_voltage):
+    PATH = path + "?id=" + id + "&cell_current=" + str(cell_current) + "&cell_voltage=" + str(cell_voltage) + "&solar_current=" + str(solar_current) + "&solar_voltage=" + str(solar_voltage)
+    return http_get(base + PATH)
 
 # API HTTP GET
 def http_get(url):
@@ -40,11 +44,11 @@ def request(URL):
     dapet1 = dapet.split('\r\n\r\n')
     fail = "{\"status\":\"Gagal Parsing Response\"}"
     try:
-        data = ujson.loads(dapet1[1])
+        data = json.loads(dapet1[1])
         print("STAT : Success Get JSON Data\n")
         print(dapet1[1])
     except:
         print("STAT : Failed Get JSON Data\n")
         print(dapet1[1])
-        return ujson.loads(fail)
+        return json.loads(fail)
     return data
